@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/go_home"
+          android:title="Home"
+          android:icon="@drawable/ic_home" />
+    <item android:id="@+id/go_score"
+          android:title="Score"
+          android:icon="@drawable/ic_score" />
+    <item android:id="@+id/go_settings"
+          android:title="Settings"
+          android:icon="@drawable/ic_setting" />
+    <item android:id="@+id/go_exit"
+          android:title="Exit"
+          android:icon="@drawable/ic_exit" />
+</menu>
