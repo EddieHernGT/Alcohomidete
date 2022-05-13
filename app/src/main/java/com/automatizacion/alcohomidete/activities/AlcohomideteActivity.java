@@ -36,26 +36,13 @@ public class AlcohomideteActivity extends AppCompatActivity{
 
     final int handlerState = 0;
     private StringBuilder recDataString = new StringBuilder();
+    private static  String address=null;
 
     ConnectedThread mConnectedThread=null;
     BluetoothManager bluetoothManager=null;
     BluetoothAdapter bluetoothAdapter=null;
     BluetoothSocket btSocket=null;
-    Handler bluetoothIn = new Handler() {
-        public void handleMessage(android.os.Message msg) {
-            if (msg.what == handlerState) {          //if message is what we want
-                String readMessage = (String) msg.obj;
-                int endOfLineIndex = recDataString.indexOf(";");                    // determine the end-of-line
-                if (endOfLineIndex > 0) {                                           // make sure there data before ~
-                    String dataInPrint = recDataString.substring(0, endOfLineIndex);    // extract string
-                    alcoholLv.setText(dataInPrint);
-                    int dataLength = dataInPrint.length();       //get length of data received
-                    // strIncom =" ";
-                    dataInPrint = " ";
-                }
-            }
-        }
-    };
+    Handler bluetoothIn = null;
 
 
     private InputStream mmInStream=null;
@@ -74,7 +61,6 @@ public class AlcohomideteActivity extends AppCompatActivity{
         bluetoothManager= BluetoothManager.getInstance();
         bluetoothAdapter=BluetoothAdapter.getDefaultAdapter();
 
-
         if (bluetoothManager == null) {
             // Bluetooth unavailable on this device :( tell the user
             Toast.makeText(this, "Bluetooth not available.", Toast.LENGTH_LONG).show(); // Replace context with your context instance.
@@ -84,6 +70,20 @@ public class AlcohomideteActivity extends AppCompatActivity{
         ImageButton btConnections = findViewById(R.id.connectionsList);
         BottomNavigationView navegation = findViewById(R.id.navegationMenu);
         alcoholLv=findViewById(R.id.alcohol_level);
+
+        bluetoothIn = new Handler() {
+            public void handleMessage(android.os.Message msg) {
+                if (msg.what == handlerState) {          //if message is what we want
+                    String readMessage = (String) msg.obj;
+                    int endOfLineIndex = recDataString.indexOf(";");                    // determine the end-of-line
+                    if (endOfLineIndex > 0) {                                           // make sure there data before ~
+                        String dataInPrint = recDataString.substring(0, endOfLineIndex);    // extract string
+                        alcoholLv.setText(dataInPrint);
+                        int dataLength = dataInPrint.length();       //get length of data received
+                    }
+                }
+            }
+        };
 
         navegation.setOnNavigationItemSelectedListener(navegationSelectedListener);
 
@@ -110,8 +110,9 @@ public class AlcohomideteActivity extends AppCompatActivity{
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 String device = adapter.getItem(i);
-                String address=device.substring(device.length()-17);
-                connetTo(address);
+                address=device.substring(device.length()-17);
+                if(connetTo())
+                    mConnectedThread.run();
             }
         });
         aConnectionBuilder.show();
@@ -148,13 +149,14 @@ public class AlcohomideteActivity extends AppCompatActivity{
         return  device.createRfcommSocketToServiceRecord(BTMODULEUUID);
     }
 
-    public void connetTo(String mac){
-        BluetoothDevice device=bluetoothAdapter.getRemoteDevice(mac);
+    public boolean connetTo(){
+        BluetoothDevice device=bluetoothAdapter.getRemoteDevice(address);
         try {
             Toast.makeText(this, "Connecting...", Toast.LENGTH_SHORT).show();
             btSocket = createBluetoothSocket(device);
         } catch (IOException e) {
             Toast.makeText(getBaseContext(), "La creacción del Socket fallo", Toast.LENGTH_LONG).show();
+            return false;
         }
         try {
             btSocket.connect();
@@ -165,9 +167,11 @@ public class AlcohomideteActivity extends AppCompatActivity{
             {
                 //insert code to deal with this
             }
+            return false;
         }
         mConnectedThread=new ConnectedThread(btSocket, bluetoothIn,handlerState);
         Toast.makeText(this, "Connected", Toast.LENGTH_SHORT).show();
+        return true;
     }
 
 }
