@@ -7,28 +7,12 @@
         android:layout_height="match_parent"
         android:background="@drawable/gradient_background"
         tools:context=".activities.AlcohomideteActivity">
-    <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:id="@+id/header_title">
-        <ImageView
-                android:layout_width="70dp"
-                android:layout_height="match_parent"
-                android:layout_alignParentStart="true"
-                android:src="@drawable/ic_logo_solo_a"/>
-        <ImageButton
-                android:layout_width="60dp"
-                android:id="@+id/connectionsList"
-                android:background="@color/ligth_orange"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_btconect"
-                android:layout_alignParentEnd="true" tools:ignore="SpeakableTextPresentCheck"/>
-    </RelativeLayout>
+
     <FrameLayout
             android:layout_height="match_parent"
             android:layout_width="match_parent"
             android:id="@+id/frameContainer"
-            android:layout_below="@+id/header_title">
+            android:layout_alignParentTop="true">
 
     </FrameLayout>
     <com.google.android.material.bottomnavigation.BottomNavigationView

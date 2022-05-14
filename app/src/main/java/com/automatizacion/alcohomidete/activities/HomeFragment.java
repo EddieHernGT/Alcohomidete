@@ -1,7 +1,14 @@
 package com.automatizacion.alcohomidete.activities;
 
+import android.app.AlertDialog;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
+import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.fragment.app.Fragment;
@@ -9,6 +16,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.automatizacion.alcohomidete.R;
+import com.automatizacion.alcohomidete.bluetooth.ConnectedThread;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.harrysoft.androidbluetoothserial.BluetoothManager;
+
+import java.io.IOException;
+import java.util.Collection;
+import java.util.UUID;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -21,6 +35,18 @@ public class HomeFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+    final int handlerState = 0;
+    private StringBuilder recDataString = new StringBuilder();
+    private static  String address=null;
+
+    ConnectedThread mConnectedThread=null;
+    BluetoothManager bluetoothManager=null;
+    BluetoothAdapter bluetoothAdapter=null;
+    BluetoothSocket btSocket=null;
+    Handler bluetoothIn = null;
+
+    private static final UUID BTMODULEUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
     TextView alcoholLv=null;
 
@@ -65,8 +91,93 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v=inflater.inflate(R.layout.fragment_home, container, false);
-        alcoholLv=(TextView) v.findViewById(R.id.alcohol_level);
+        alcoholLv=v.findViewById(R.id.alcohol_level);
+        ImageButton btConnections = v.findViewById(R.id.connectionsList);
 
+
+        bluetoothManager= BluetoothManager.getInstance();
+        bluetoothAdapter= BluetoothAdapter.getDefaultAdapter();
+
+        if (bluetoothManager == null) {
+            // Bluetooth unavailable on this device :( tell the user
+            Toast.makeText(getActivity(), "Bluetooth not available.", Toast.LENGTH_LONG).show(); // Replace context with your context instance.
+        }
+
+
+        bluetoothIn = new Handler() {
+            public void handleMessage(android.os.Message msg) {
+                String readMessage = (String) msg.obj;
+                recDataString.append(readMessage);              //keep appending to string until ~
+                int endOfLineIndex = recDataString.indexOf(";");
+                String dataInPrint = recDataString.substring(0, endOfLineIndex);
+                int dataLength = dataInPrint.length();       //get length of data received
+                if (endOfLineIndex > 0) {
+                    if (recDataString.charAt(0) == '#') {
+                        String lvAlhl = recDataString.substring(1, dataLength);
+                        alcoholLv.setText(lvAlhl);
+                    }
+                }
+                recDataString.delete(0, recDataString.length());      //clear all string data
+            }
+        };
+
+        btConnections.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showConnections();
+            }
+        });
         return v;
+    }
+    private BluetoothSocket createBluetoothSocket(BluetoothDevice device) throws IOException {
+        return  device.createRfcommSocketToServiceRecord(BTMODULEUUID);
+    }
+
+    public void  showConnections(){
+        AlertDialog.Builder aConnectionBuilder=new AlertDialog.Builder(getActivity());
+        ArrayAdapter<String> adapter=new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1);
+        Collection<BluetoothDevice> pairedDevices = bluetoothManager.getPairedDevicesList();
+        for (BluetoothDevice device : pairedDevices) {
+            adapter.add(device.getName()+"/"+device.getAddress());
+        }
+        aConnectionBuilder.setTitle("Name/Address");
+        aConnectionBuilder.setAdapter(adapter, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                String device = adapter.getItem(i);
+                address=device.substring(device.length()-17);
+                if(connetTo())
+                    mConnectedThread.start();
+                else
+                    Toast.makeText(getActivity(), "Can't reach the device", Toast.LENGTH_LONG).show();
+            }
+        });
+        aConnectionBuilder.show();
+    }
+
+    public boolean connetTo(){
+        BluetoothDevice device=bluetoothAdapter.getRemoteDevice(address);
+        try {
+            Toast.makeText(getActivity(), "Connecting...", Toast.LENGTH_SHORT).show();
+            btSocket = createBluetoothSocket(device);
+        } catch (IOException e) {
+            Toast.makeText(getActivity().getBaseContext(), "Socket creation filed", Toast.LENGTH_LONG).show();
+            return false;
+        }
+        try {
+            btSocket.connect();
+        } catch (IOException e) {
+            try {
+                btSocket.close();
+            } catch (IOException e2)
+            {
+                //insert code to deal with this
+                return false;
+            }
+            return false;
+        }
+        mConnectedThread=new ConnectedThread(btSocket, bluetoothIn,handlerState);
+        Toast.makeText(getActivity(), "Connected", Toast.LENGTH_SHORT).show();
+        return true;
     }
 }
