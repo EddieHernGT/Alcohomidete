@@ -7,6 +7,7 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.DialogInterface;
 import android.os.Handler;
+import androidx.fragment.app.FragmentManager;
 import com.automatizacion.alcohomidete.bluetooth.ConnectedThread;
 import com.harrysoft.androidbluetoothserial.BluetoothManager;
 import android.os.Bundle;
@@ -20,19 +21,18 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import com.automatizacion.alcohomidete.R;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.harrysoft.androidbluetoothserial.SimpleBluetoothDeviceInterface;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Collection;
 import java.util.UUID;
 
 public class AlcohomideteActivity extends AppCompatActivity{
+    FragmentManager manager=null;
 
-    HomeFragment home=new HomeFragment();
-    ScoreFragment score=new ScoreFragment();
-    SettingsFragment settings=new SettingsFragment();
-    TextView alcoholLv=null;
+    HomeFragment home=null;
+    ScoreFragment score=null;
+    SettingsFragment settings=null;
+
 
     final int handlerState = 0;
     private StringBuilder recDataString = new StringBuilder();
@@ -45,18 +45,22 @@ public class AlcohomideteActivity extends AppCompatActivity{
     Handler bluetoothIn = null;
 
 
-    private InputStream mmInStream=null;
-    private SimpleBluetoothDeviceInterface deviceInterface=null;
-
 
     private static final UUID BTMODULEUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
-
 
 
     @Override
     protected void onCreate(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_alcohomidete);
+        home=new HomeFragment();
+        score=new ScoreFragment();
+        settings=new SettingsFragment();
+
+        loadFragment(home);
+
+        ImageButton btConnections = findViewById(R.id.connectionsList);
+        BottomNavigationView navegation = findViewById(R.id.navegationMenu);
 
         bluetoothManager= BluetoothManager.getInstance();
         bluetoothAdapter=BluetoothAdapter.getDefaultAdapter();
@@ -67,21 +71,21 @@ public class AlcohomideteActivity extends AppCompatActivity{
             finish();
         }
 
-        ImageButton btConnections = findViewById(R.id.connectionsList);
-        BottomNavigationView navegation = findViewById(R.id.navegationMenu);
-        alcoholLv=findViewById(R.id.alcohol_level);
 
         bluetoothIn = new Handler() {
             public void handleMessage(android.os.Message msg) {
-                if (msg.what == handlerState) {          //if message is what we want
-                    String readMessage = (String) msg.obj;
-                    int endOfLineIndex = recDataString.indexOf(";");                    // determine the end-of-line
-                    if (endOfLineIndex > 0) {                                           // make sure there data before ~
-                        String dataInPrint = recDataString.substring(0, endOfLineIndex);    // extract string
-                        alcoholLv.setText(dataInPrint);
-                        int dataLength = dataInPrint.length();       //get length of data received
+                String readMessage = (String) msg.obj;
+                recDataString.append(readMessage);              //keep appending to string until ~
+                int endOfLineIndex = recDataString.indexOf(";");
+                String dataInPrint = recDataString.substring(0, endOfLineIndex);
+                int dataLength = dataInPrint.length();       //get length of data received
+                if (endOfLineIndex > 0) {
+                    if (recDataString.charAt(0) == '#') {
+                        String lvAlhl = recDataString.substring(1, dataLength);
+                        Toast.makeText(AlcohomideteActivity.this, lvAlhl, Toast.LENGTH_SHORT).show();
                     }
                 }
+                recDataString.delete(0, recDataString.length());      //clear all string data
             }
         };
 
@@ -94,7 +98,6 @@ public class AlcohomideteActivity extends AppCompatActivity{
             }
         });
 
-        loadFragment(home);
     }
 
 
@@ -112,7 +115,9 @@ public class AlcohomideteActivity extends AppCompatActivity{
                 String device = adapter.getItem(i);
                 address=device.substring(device.length()-17);
                 if(connetTo())
-                    mConnectedThread.run();
+                    mConnectedThread.start();
+                else
+                    Toast.makeText(AlcohomideteActivity.this, "Can't reach the device", Toast.LENGTH_LONG).show();
             }
         });
         aConnectionBuilder.show();
@@ -140,10 +145,12 @@ public class AlcohomideteActivity extends AppCompatActivity{
     };
 
     private void loadFragment(Fragment fragment) {
-        FragmentTransaction transaction= getSupportFragmentManager().beginTransaction();
+        manager=getSupportFragmentManager();
+        FragmentTransaction transaction= manager.beginTransaction();
         transaction.replace(R.id.frameContainer,fragment);
         transaction.commit();
     }
+
 
     private BluetoothSocket createBluetoothSocket(BluetoothDevice device) throws IOException {
         return  device.createRfcommSocketToServiceRecord(BTMODULEUUID);
@@ -155,7 +162,7 @@ public class AlcohomideteActivity extends AppCompatActivity{
             Toast.makeText(this, "Connecting...", Toast.LENGTH_SHORT).show();
             btSocket = createBluetoothSocket(device);
         } catch (IOException e) {
-            Toast.makeText(getBaseContext(), "La creacción del Socket fallo", Toast.LENGTH_LONG).show();
+            Toast.makeText(getBaseContext(), "Socket creation filed", Toast.LENGTH_LONG).show();
             return false;
         }
         try {
@@ -166,6 +173,7 @@ public class AlcohomideteActivity extends AppCompatActivity{
             } catch (IOException e2)
             {
                 //insert code to deal with this
+                return false;
             }
             return false;
         }

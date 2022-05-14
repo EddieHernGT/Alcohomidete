@@ -3,7 +3,7 @@
              xmlns:tools="http://schemas.android.com/tools"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             tools:context=".HomeFragment">
+             tools:context=".activities.HomeFragment">
 
     <!-- TODO: Update blank fragment layout -->
     <RelativeLayout
@@ -48,7 +48,6 @@
                 android:text="----"
                 android:textColor="@color/orange"
                 android:textSize="30dp"
-                android:inputType="number"
                 android:ems="10"
                 android:backgroundTint="@color/ligth_orange"
                 android:id="@+id/alcohol_level"
