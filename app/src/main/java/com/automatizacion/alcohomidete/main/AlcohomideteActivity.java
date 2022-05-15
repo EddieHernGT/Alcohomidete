@@ -1,19 +1,9 @@
-package com.automatizacion.alcohomidete.activities;
+package com.automatizacion.alcohomidete.main;
 
 
-import android.app.AlertDialog;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
-import android.content.DialogInterface;
-import android.os.Handler;
 import androidx.fragment.app.FragmentManager;
-import com.automatizacion.alcohomidete.bluetooth.ConnectedThread;
-import com.harrysoft.androidbluetoothserial.BluetoothManager;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.*;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;

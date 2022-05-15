@@ -1,4 +1,4 @@
-package com.automatizacion.alcohomidete.activities;
+package com.automatizacion.alcohomidete.main;
 
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
@@ -17,10 +17,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.automatizacion.alcohomidete.R;
 import com.automatizacion.alcohomidete.bluetooth.ConnectedThread;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.automatizacion.alcohomidete.dbconnections.DBConection;
 import com.harrysoft.androidbluetoothserial.BluetoothManager;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -35,6 +37,7 @@ public class HomeFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
 
     final int handlerState = 0;
     private StringBuilder recDataString = new StringBuilder();
@@ -93,7 +96,10 @@ public class HomeFragment extends Fragment {
         View v=inflater.inflate(R.layout.fragment_home, container, false);
         alcoholLv=v.findViewById(R.id.alcohol_level);
         ImageButton btConnections = v.findViewById(R.id.connectionsList);
+        TextView userName=v.findViewById(R.id.userName);
 
+
+        userName.setText("Yo XD");
 
         bluetoothManager= BluetoothManager.getInstance();
         bluetoothAdapter= BluetoothAdapter.getDefaultAdapter();

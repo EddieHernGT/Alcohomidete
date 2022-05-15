@@ -26,16 +26,16 @@
             android:selectAllOnFocus="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" android:minHeight="48dp"/>
     <Button
             android:id="@+id/forgot"
-            android:enabled="false"
+            android:enabled="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="64dp"
-            android:textColor="@color/ligth_orange"
+            android:textColor="@color/white"
             android:text="forgot password? "
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -68,14 +68,14 @@
             app:layout_constraintVertical_bias="0.213"/>
     <Button
             android:id="@+id/SignIn"
-            android:enabled="false"
+            android:enabled="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="64dp"
             android:text="Sign in "
-            android:textColor="@color/orange"
+            android:textColor="@color/white"
             android:background="@color/ligth_orange"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -95,7 +95,7 @@
             android:selectAllOnFocus="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/username"/>
+            app:layout_constraintTop_toBottomOf="@+id/username" android:minHeight="48dp"/>
     <ProgressBar
             android:id="@+id/loading"
             android:visibility="gone"

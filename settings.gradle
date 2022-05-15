@@ -9,3 +9,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Alcohomidete"
 include ':app'
+include ':lib'

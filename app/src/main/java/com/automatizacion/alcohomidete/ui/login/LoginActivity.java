@@ -17,11 +17,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.automatizacion.alcohomidete.R;
-import com.automatizacion.alcohomidete.activities.AlcohomideteActivity;
+import com.automatizacion.alcohomidete.main.AlcohomideteActivity;
 import com.automatizacion.alcohomidete.databinding.ActivityLoginBinding;
+import com.automatizacion.alcohomidete.registation.ForgotPassword;
+import com.automatizacion.alcohomidete.registation.JoinIn;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -41,6 +42,8 @@ public class LoginActivity extends AppCompatActivity {
         final EditText usernameEditText = binding.username;
         final EditText passwordEditText = binding.password;
         final Button loginButton = binding.login;
+        final Button forgotPass=binding.forgot;
+        final Button singIn=binding.SignIn;
         final ProgressBar loadingProgressBar = binding.loading;
 
         loginViewModel.getLoginFormState().observe(this, new Observer<LoginFormState>() {
@@ -117,6 +120,20 @@ public class LoginActivity extends AppCompatActivity {
                 loadingProgressBar.setVisibility(View.VISIBLE);
                 loginViewModel.login(usernameEditText.getText().toString(),
                         passwordEditText.getText().toString());
+            }
+        });
+        singIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent JoinIn = new Intent(LoginActivity.this, JoinIn.class);
+                startActivity(JoinIn);
+            }
+        });
+        forgotPass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent forgotActivity = new Intent(LoginActivity.this, ForgotPassword.class);
+                startActivity(forgotActivity);
             }
         });
     }
