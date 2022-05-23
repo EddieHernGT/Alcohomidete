@@ -5,20 +5,20 @@ import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.*;
 import androidx.fragment.app.Fragment;
 import com.automatizacion.alcohomidete.R;
 import com.automatizacion.alcohomidete.bluetooth.ConnectedThread;
@@ -65,7 +65,8 @@ public class HomeFragment extends Fragment {
 
     TextView alcoholLv=null;
     ImageButton btnUpload=null;
-
+    Button btnOpenUber=null;
+    Button btnCallHelp=null;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -111,10 +112,33 @@ public class HomeFragment extends Fragment {
         alcoholLv=v.findViewById(R.id.alcohol_level);
         ImageButton btConnections = v.findViewById(R.id.connectionsList);
         btnUpload=v.findViewById(R.id.updateScoreButton);
+        btnOpenUber=v.findViewById(R.id.openUber);
+        btnCallHelp=v.findViewById(R.id.callHelp);
         TextView userName=v.findViewById(R.id.userName);
 
         userName.setText(actualUser.getName());
         btnUpload.setOnClickListener(uploadScore);
+
+        btnOpenUber.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    Intent i = new Intent(android.content.Intent.ACTION_VIEW);
+                    i.setData(Uri.parse("https://play.google.com/store/apps/details?id=com.ubercab"));
+                    startActivity(i);
+                }catch (Exception e){e.printStackTrace();}
+            }
+        });
+        btnCallHelp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    Intent i = new Intent(android.content.Intent.ACTION_VIEW);
+                    i.setData(Uri.parse("https://play.google.com/store/apps/details?id=com.google.android.contacts"));
+                    startActivity(i);
+                }catch (Exception e){e.printStackTrace();}
+            }
+        });
 
         bluetoothManager= BluetoothManager.getInstance();
         bluetoothAdapter= BluetoothAdapter.getDefaultAdapter();
@@ -214,6 +238,11 @@ public class HomeFragment extends Fragment {
             String date = sdf.format(new Date());
             String hour=shf.format(new Date());
             String alcoholLevel= alcoholLv.getText().toString();
+            if (Integer.parseInt(alcoholLevel)>500){
+                Toast.makeText(getContext(), "You drank too much...", Toast.LENGTH_SHORT).show();
+                btnOpenUber.setEnabled(true);
+                btnCallHelp.setEnabled(true);
+            }
             if (!alcoholLevel.equals("---")) {
                 if (actualUser.getScoreID() == null) {
                     UUID randomUUID = UUID.randomUUID();

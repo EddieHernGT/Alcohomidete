@@ -63,6 +63,7 @@
             <androidx.appcompat.widget.ActionMenuView
                     android:layout_width="wrap_content"
                     android:layout_margin="30dp"
+                    android:id="@+id/scoreData"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/scoreText">
                 <TextView
@@ -96,6 +97,27 @@
                         android:minHeight="50dp"
                         android:id="@+id/updateScoreButton" tools:ignore="SpeakableTextPresentCheck"/>
             </androidx.appcompat.widget.ActionMenuView>
+            <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/scoreData"
+                    android:id="@+id/openUber"
+                    android:enabled="false"
+                    android:layout_marginRight="20dp"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true"
+                    android:text="Uber"/>
+            <Button
+                    android:layout_width="wrap_content"
+                    android:layout_below="@id/scoreData"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:enabled="false"
+                    android:id="@+id/callHelp"
+                    android:layout_marginRight="20dp"
+                    android:layout_toRightOf="@+id/openUber"
+                    android:text="Call friend"
+                    android:layout_height="wrap_content"/>
         </RelativeLayout>
     </RelativeLayout>
 
