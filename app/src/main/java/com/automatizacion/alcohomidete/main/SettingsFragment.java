@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import com.automatizacion.alcohomidete.R;
 import com.automatizacion.alcohomidete.people.User;
@@ -99,6 +100,7 @@ public class SettingsFragment extends Fragment {
         public void onClick(View v) {
             actualUser.updateData(getContext(),String.valueOf(txtUserName.getText()),String.valueOf(txtPass.getText()));
             updateInfo();
+            Toast.makeText(getContext(), "Data Updated", Toast.LENGTH_SHORT).show();
             txtUserName.setEnabled(false);
             txtPass.setEnabled(false);
         }
@@ -109,14 +111,14 @@ public class SettingsFragment extends Fragment {
         @Override
         public void onClick(View v) {
             txtUserName.setEnabled(true);
-
+            txtUserName.requestFocus();
         }
     };
     View.OnClickListener enablePass=new View.OnClickListener() {
         @Override
         public void onClick(View v) {
             txtPass.setEnabled(true);
-
+            txtPass.requestFocus();
         }
     };
 

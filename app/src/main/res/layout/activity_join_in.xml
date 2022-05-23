@@ -28,13 +28,19 @@
                     android:layout_height="wrap_content"
                     android:inputType="textPersonName"
                     android:hint="Name"
+                    android:backgroundTint="@color/orange"
+                    android:textColorHint="?android:textColorHint"
+                    android:textColor="?android:textColorPrimary"
                     android:ems="10"
                     android:id="@+id/PersonName"/>
             <EditText
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:inputType="textPersonName"
+                    android:backgroundTint="@color/orange"
+                    android:textColorHint="?android:textColorHint"
                     android:hint="Surname"
+                    android:textColor="?android:textColorPrimary"
                     android:ems="10"
                     android:id="@+id/PersonSurname"/>
 
@@ -44,6 +50,9 @@
                 android:layout_height="wrap_content"
                 android:hint="18"
                 android:inputType="number"
+                android:backgroundTint="@color/orange"
+                android:textColorHint="?android:textColorHint"
+                android:textColor="?android:textColorPrimary"
                 android:ems="10"
                 android:id="@+id/peopleAge"/>
         <RadioGroup
@@ -56,23 +65,31 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:checked="true"
+                        android:textColor="?android:textColorPrimary"
                         android:id="@+id/radioButton2"/>
                 <RadioButton
                         android:text="Female"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textColor="?android:textColorPrimary"
                         android:id="@+id/radioButton"/>
             </RadioGroup>
             <EditText
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="?android:textColorPrimary"
                     android:inputType="textPersonName"
+                    android:backgroundTint="@color/orange"
                     android:hint="User Name"
+                    android:textColorHint="?android:textColorHint"
                     android:ems="10"
                     android:id="@+id/PersonUserName"/>
             <EditText
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:backgroundTint="@color/orange"
+                    android:textColorHint="?android:textColorHint"
+                    android:textColor="?android:textColorPrimary"
                     android:inputType="textPassword"
                     android:hint="Password"
                     android:ems="10"
@@ -81,6 +98,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:inputType="textPassword"
+                    android:backgroundTint="@color/orange"
+                    android:textColorHint="?android:textColorHint"
+
+                    android:textColor="?android:textColorPrimary"
                     android:hint="Confirm Password"
                     android:ems="10"
                     android:id="@+id/PasswordConfirm"/>

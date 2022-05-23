@@ -4,11 +4,14 @@ import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+import androidx.annotation.ColorInt;
+import androidx.annotation.DrawableRes;
 import androidx.fragment.app.Fragment;
 import com.automatizacion.alcohomidete.R;
 import com.automatizacion.alcohomidete.dbconnections.DBCConnectionHelper;
@@ -87,7 +90,7 @@ public class ScoreFragment extends Fragment {
                 DBCConnectionHelper conn=new DBCConnectionHelper(getContext());
                 SQLiteDatabase db=conn.getWritableDatabase();
                 Cursor scoreData=db.rawQuery("SELECT ALCOHOLIC_GRADE, REGISTER_DATE, REGISTER_TIME " +
-                        "FROM Score WHERE RECORD_ID='"+actualUser.getScoreID()+"';",null);
+                        "FROM Score WHERE RECORD_ID='"+actualUser.getScoreID()+"' ORDER BY 2,3 DESC;",null);
                 scoreData.moveToFirst();
                 do {
                     scoreRow=new TableRow(getContext());

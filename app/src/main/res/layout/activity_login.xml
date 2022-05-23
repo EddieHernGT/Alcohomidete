@@ -89,6 +89,7 @@
             android:layout_marginTop="16dp"
             android:hint="@string/prompt_password"
             android:imeActionLabel="@string/action_sign_in_short"
+            android:backgroundTint="@color/ligth_orange"
             android:textColorHint="@color/ligth_orange"
             android:imeOptions="actionDone"
             android:inputType="textPassword"

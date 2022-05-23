@@ -40,7 +40,6 @@ public class JoinIn extends AppCompatActivity {
 
 
     }
-
     View.OnClickListener joinIn=new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -77,6 +76,7 @@ public class JoinIn extends AppCompatActivity {
                     }
                     joinInNewUser(db, usrName, pass, pName, pSurname, pAge, gender);
                     db.close();
+                    Toast.makeText(JoinIn.this, "New registration succeeded", Toast.LENGTH_SHORT).show();
                     finish();
                 }catch (Exception e){
                     e.printStackTrace();

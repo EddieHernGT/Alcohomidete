@@ -9,6 +9,7 @@ import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -134,7 +135,9 @@ public class HomeFragment extends Fragment {
                 if (endOfLineIndex > 0) {
                     if (recDataString.charAt(0) == '#') {
                         String lvAlhl = recDataString.substring(1, dataLength);
-                        alcoholLv.setText(lvAlhl);
+                        try {
+                            alcoholLv.setText(lvAlhl);
+                        }catch (Exception e){e.printStackTrace();}
                     }
                 }
                 recDataString.delete(0, recDataString.length());      //clear all string data
@@ -142,6 +145,7 @@ public class HomeFragment extends Fragment {
         };
 
         btConnections.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("ResourceAsColor")
             @Override
             public void onClick(View view) {
                 showConnections();
@@ -202,6 +206,7 @@ public class HomeFragment extends Fragment {
     }
 
     View.OnClickListener uploadScore=new View.OnClickListener() {
+        @SuppressLint("ResourceAsColor")
         @Override
         public void onClick(View v) {
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
@@ -209,30 +214,36 @@ public class HomeFragment extends Fragment {
             String date = sdf.format(new Date());
             String hour=shf.format(new Date());
             String alcoholLevel= alcoholLv.getText().toString();
-            if (actualUser.getScoreID()==null){
-                UUID randomUUID = UUID.randomUUID();
-                String id=randomUUID.toString().replaceAll("_", "");
-                try{
-                    DBCConnectionHelper conn=new DBCConnectionHelper(getContext());
-                    SQLiteDatabase db=conn.getWritableDatabase();
-                    db.execSQL("UPDATE Users SET RECORD_ID='"+id+"' WHERE USER_NAME='"+actualUser.getUserName()+"';");
+            if (!alcoholLevel.equals("---")) {
+                if (actualUser.getScoreID() == null) {
+                    UUID randomUUID = UUID.randomUUID();
+                    String id = randomUUID.toString().replaceAll("_", "");
+                    try {
+                        DBCConnectionHelper conn = new DBCConnectionHelper(getContext());
+                        SQLiteDatabase db = conn.getWritableDatabase();
+                        db.execSQL("UPDATE Users SET RECORD_ID='" + id + "' WHERE USER_NAME='" + actualUser.getUserName() + "';");
+                        conn.close();
+                        actualUser.setScoreID(id);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                try {
+                    DBCConnectionHelper conn = new DBCConnectionHelper(getContext());
+                    SQLiteDatabase db = conn.getWritableDatabase();
+                    ContentValues scoreData = new ContentValues();
+                    scoreData.put("RECORD_ID", actualUser.getScoreID());
+                    scoreData.put("ALCOHOLIC_GRADE", alcoholLevel);
+                    scoreData.put("REGISTER_DATE", date);
+                    scoreData.put("REGISTER_TIME", hour);
+                    db.insert("Score", null, scoreData);
                     conn.close();
-                    actualUser.setScoreID(id);
-                }catch (Exception e){e.printStackTrace();}
-            }
-            try{
-                DBCConnectionHelper conn=new DBCConnectionHelper(getContext());
-                SQLiteDatabase db=conn.getWritableDatabase();
-                ContentValues scoreData=new ContentValues();
-                scoreData.put("RECORD_ID",actualUser.getScoreID());
-                scoreData.put("ALCOHOLIC_GRADE",alcoholLevel);
-                scoreData.put("REGISTER_DATE",date);
-                scoreData.put("REGISTER_TIME",hour);
-                db.insert("Score",null,scoreData);
-                conn.close();
-                Toast.makeText(getContext(), "Successful update", Toast.LENGTH_SHORT).show();
-            }catch (Exception e){e.printStackTrace();}
-
+                    Toast.makeText(getContext(), "Successful update", Toast.LENGTH_SHORT).show();
+                    alcoholLv.setText("---");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }else Toast.makeText(getContext(), "No Score received", Toast.LENGTH_SHORT).show();
         }
     };
 

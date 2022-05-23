@@ -60,6 +60,7 @@ public class ForgotPassword extends AppCompatActivity {
                     }
                     updateUserPass(db, usrName, pass);
                     db.close();
+                    Toast.makeText(ForgotPassword.this, "Password changed successfully", Toast.LENGTH_SHORT).show();
                     finish();
                 }catch (Exception e){
                     e.printStackTrace();
