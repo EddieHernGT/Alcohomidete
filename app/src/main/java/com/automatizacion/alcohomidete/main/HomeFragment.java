@@ -1,30 +1,39 @@
 package com.automatizacion.alcohomidete.main;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.ContentValues;
 import android.content.DialogInterface;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.fragment.app.Fragment;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import com.automatizacion.alcohomidete.R;
 import com.automatizacion.alcohomidete.bluetooth.ConnectedThread;
-import com.automatizacion.alcohomidete.dbconnections.DBConection;
+import com.automatizacion.alcohomidete.dbconnections.DBCConnectionHelper;
+import com.automatizacion.alcohomidete.people.User;
+import com.automatizacion.alcohomidete.ui.login.LoginActivity;
 import com.harrysoft.androidbluetoothserial.BluetoothManager;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.net.URISyntaxException;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
+import java.util.Date;
 import java.util.UUID;
+
+import static android.content.Intent.getIntent;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -37,6 +46,8 @@ public class HomeFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+
+    User actualUser=null;
 
 
     final int handlerState = 0;
@@ -52,6 +63,7 @@ public class HomeFragment extends Fragment {
     private static final UUID BTMODULEUUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
     TextView alcoholLv=null;
+    ImageButton btnUpload=null;
 
 
     // TODO: Rename and change types of parameters
@@ -89,6 +101,7 @@ public class HomeFragment extends Fragment {
         }
     }
 
+    @SuppressLint("Range")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -96,10 +109,11 @@ public class HomeFragment extends Fragment {
         View v=inflater.inflate(R.layout.fragment_home, container, false);
         alcoholLv=v.findViewById(R.id.alcohol_level);
         ImageButton btConnections = v.findViewById(R.id.connectionsList);
+        btnUpload=v.findViewById(R.id.updateScoreButton);
         TextView userName=v.findViewById(R.id.userName);
 
-
-        userName.setText("Yo XD");
+        userName.setText(actualUser.getName());
+        btnUpload.setOnClickListener(uploadScore);
 
         bluetoothManager= BluetoothManager.getInstance();
         bluetoothAdapter= BluetoothAdapter.getDefaultAdapter();
@@ -185,5 +199,44 @@ public class HomeFragment extends Fragment {
         mConnectedThread=new ConnectedThread(btSocket, bluetoothIn,handlerState);
         Toast.makeText(getActivity(), "Connected", Toast.LENGTH_SHORT).show();
         return true;
+    }
+
+    View.OnClickListener uploadScore=new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+            SimpleDateFormat shf = new SimpleDateFormat("HH:mm:ss");
+            String date = sdf.format(new Date());
+            String hour=shf.format(new Date());
+            String alcoholLevel= alcoholLv.getText().toString();
+            if (actualUser.getScoreID()==null){
+                UUID randomUUID = UUID.randomUUID();
+                String id=randomUUID.toString().replaceAll("_", "");
+                try{
+                    DBCConnectionHelper conn=new DBCConnectionHelper(getContext());
+                    SQLiteDatabase db=conn.getWritableDatabase();
+                    db.execSQL("UPDATE Users SET RECORD_ID='"+id+"' WHERE USER_NAME='"+actualUser.getUserName()+"';");
+                    conn.close();
+                    actualUser.setScoreID(id);
+                }catch (Exception e){e.printStackTrace();}
+            }
+            try{
+                DBCConnectionHelper conn=new DBCConnectionHelper(getContext());
+                SQLiteDatabase db=conn.getWritableDatabase();
+                ContentValues scoreData=new ContentValues();
+                scoreData.put("RECORD_ID",actualUser.getScoreID());
+                scoreData.put("ALCOHOLIC_GRADE",alcoholLevel);
+                scoreData.put("REGISTER_DATE",date);
+                scoreData.put("REGISTER_TIME",hour);
+                db.insert("Score",null,scoreData);
+                conn.close();
+                Toast.makeText(getContext(), "Successful update", Toast.LENGTH_SHORT).show();
+            }catch (Exception e){e.printStackTrace();}
+
+        }
+    };
+
+    public  void setNameUsers(User user){
+        this.actualUser=user;
     }
 }

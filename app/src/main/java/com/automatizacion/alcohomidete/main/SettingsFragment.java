@@ -1,11 +1,15 @@
 package com.automatizacion.alcohomidete.main;
 
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import androidx.fragment.app.Fragment;
 import com.automatizacion.alcohomidete.R;
+import com.automatizacion.alcohomidete.people.User;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -20,8 +24,16 @@ public class SettingsFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
+    User actualUser=null;
+    EditText txtUserName=null;
+    EditText txtPass=null;
+    ImageButton btnEnableUserName=null;
+    ImageButton btnEnablePass=null;
+    Button btnUpdate=null;
     private String mParam1;
     private String mParam2;
+    private String userName=null;
+    private String password=null;
 
     public SettingsFragment() {
         // Required empty public constructor
@@ -52,12 +64,63 @@ public class SettingsFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_settings, container, false);
+        View v=inflater.inflate(R.layout.fragment_settings, container, false);
+
+        txtUserName=v.findViewById(R.id.fsUserName);
+        txtPass=v.findViewById(R.id.fsPassword);
+
+        btnEnableUserName = v.findViewById(R.id.enableUser);
+        btnEnablePass = v.findViewById(R.id.enablePassword);
+        btnUpdate=v.findViewById(R.id.updateButton);
+
+        updateInfo();
+
+        btnEnableUserName.setOnClickListener(enableUserName);
+        btnEnablePass.setOnClickListener(enablePass);
+        btnUpdate.setOnClickListener(updateData);
+
+        return v;
+    }
+
+    private void updateInfo() {
+        txtUserName.setText(actualUser.getUserName());
+        txtPass.setText(actualUser.getPassword());
+    }
+
+    View.OnClickListener updateData=new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            actualUser.updateData(getContext(),String.valueOf(txtUserName.getText()),String.valueOf(txtPass.getText()));
+            updateInfo();
+            txtUserName.setEnabled(false);
+            txtPass.setEnabled(false);
+        }
+    };
+
+
+    View.OnClickListener enableUserName=new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            txtUserName.setEnabled(true);
+
+        }
+    };
+    View.OnClickListener enablePass=new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            txtPass.setEnabled(true);
+
+        }
+    };
+
+    public void setUserData(User actual) {
+        this.actualUser=actual;
     }
 }

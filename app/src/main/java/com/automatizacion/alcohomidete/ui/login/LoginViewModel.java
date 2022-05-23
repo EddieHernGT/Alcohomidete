@@ -1,14 +1,13 @@
 package com.automatizacion.alcohomidete.ui.login;
 
+import android.util.Patterns;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
-import android.util.Patterns;
-
+import com.automatizacion.alcohomidete.R;
 import com.automatizacion.alcohomidete.data.LoginRepository;
 import com.automatizacion.alcohomidete.data.Result;
 import com.automatizacion.alcohomidete.data.model.LoggedInUser;
-import com.automatizacion.alcohomidete.R;
 
 public class LoginViewModel extends ViewModel {
 

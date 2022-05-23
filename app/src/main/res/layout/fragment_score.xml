@@ -23,21 +23,30 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
-                android:layout_alignParentStart="true"
                 android:layout_below="@+id/header_title"
                 android:layout_marginTop="30dp"
-                android:layout_marginLeft="20dp"
+                android:padding="10dp"
                 android:id="@+id/scoreTitle"
-                android:textSize="30dp"
+                android:textSize="25dp"
                 android:textColor="@color/ligth_orange"
-                android:text="Tis is your score history:"/>
+                android:text="This is your score history:"/>
+        <ImageButton
+                android:layout_width="30dp"
+                android:layout_below="@+id/header_title"
+                android:src="@drawable/ic_reload"
+                android:id="@+id/sfRelodeButton"
+                android:background="@color/ligth_orange"
+                android:layout_marginTop="40dp"
+                android:layout_marginLeft="10dp"
+                android:layout_toStartOf="@+id/scoreTitle"
+                android:layout_height="30dp"/>
         <TableLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_margin="20dp"
                 android:stretchColumns="*"
-                android:id="@+id/socoreTable"
+                android:id="@+id/sfScoreTable"
                 android:layout_below="@+id/scoreTitle">
             <TableRow android:id="@+id/scoreTitleHeaders">
                 <TextView

@@ -1,11 +1,18 @@
 package com.automatizacion.alcohomidete.main;
 
+import android.annotation.SuppressLint;
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.*;
+import androidx.fragment.app.Fragment;
 import com.automatizacion.alcohomidete.R;
+import com.automatizacion.alcohomidete.dbconnections.DBCConnectionHelper;
+import com.automatizacion.alcohomidete.people.User;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -22,6 +29,10 @@ public class ScoreFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    ImageButton relodeButton=null;
+    TableLayout scoreTable=null;
+    TableRow scoreRow=null;
+    private User actualUser=null;
 
     public ScoreFragment() {
         // Required empty public constructor
@@ -58,6 +69,56 @@ public class ScoreFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_score, container, false);
+        View v=inflater.inflate(R.layout.fragment_score, container, false);
+        scoreTable=v.findViewById(R.id.sfScoreTable);
+        try {
+            relodeButton=v.findViewById(R.id.sfRelodeButton);
+
+            relodeButton.setOnClickListener(loadGeneralScores);
+        }catch (Exception e){e.printStackTrace();}
+        return v;
+    }
+
+    View.OnClickListener loadGeneralScores=new View.OnClickListener() {
+        @SuppressLint({"Range", "ResourceAsColor"})
+        @Override
+        public void onClick(View v) {
+            try {
+                DBCConnectionHelper conn=new DBCConnectionHelper(getContext());
+                SQLiteDatabase db=conn.getWritableDatabase();
+                Cursor scoreData=db.rawQuery("SELECT ALCOHOLIC_GRADE, REGISTER_DATE, REGISTER_TIME " +
+                        "FROM Score WHERE RECORD_ID='"+actualUser.getScoreID()+"';",null);
+                scoreData.moveToFirst();
+                do {
+                    scoreRow=new TableRow(getContext());
+                    TextView dataLV=new TextView(getContext());
+                    TextView dataD=new TextView(getContext());
+                    TextView dataH=new TextView(getContext());
+                    dataLV.setBackgroundColor(R.color.white);
+                    dataLV.setTextColor(R.color.black);
+                    dataLV.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                    dataLV.setTextSize(20);
+                    dataLV.setText(scoreData.getString(scoreData.getColumnIndex("ALCOHOLIC_GRADE")));
+                    scoreRow.addView(dataLV);
+                    dataD.setBackgroundColor(R.color.white);
+                    dataD.setTextColor(R.color.black);
+                    dataD.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                    dataD.setTextSize(20);
+                    dataD.setText(scoreData.getString(scoreData.getColumnIndex("REGISTER_DATE")));
+                    scoreRow.addView(dataD);
+                    dataH.setBackgroundColor(R.color.white);
+                    dataH.setTextColor(R.color.black);
+                    dataH.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+                    dataH.setTextSize(20);
+                    dataH.setText(scoreData.getString(scoreData.getColumnIndex("REGISTER_TIME")));
+                    scoreRow.addView(dataH);
+                    scoreTable.addView(scoreRow);
+                } while (scoreData.moveToNext());
+            }catch (Exception e){e.printStackTrace();}
+        }
+    };
+
+    public void setScore(User user){
+        this.actualUser=user;
     }
 }

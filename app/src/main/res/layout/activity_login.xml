@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="180dp"
             android:textColorHint="@color/ligth_orange"
-            android:hint="@string/prompt_email"
+            android:hint="User Name"
             android:backgroundTint="@color/ligth_orange"
             android:textColor="@color/ligth_orange"
             android:inputType="textEmailAddress"

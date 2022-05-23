@@ -48,7 +48,7 @@
                     android:textSize="40dp"
                     android:textColor="@color/ligth_orange"
                     android:layout_below="@+id/hiText"
-                    android:layout_centerHorizontal="true" />
+                    android:layout_centerHorizontal="true"/>
             <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -60,20 +60,42 @@
                     android:layout_marginTop="100dp"
                     android:layout_alignParentLeft="true"
                     android:layout_marginLeft="30dp"/>
-            <TextView
+            <androidx.appcompat.widget.ActionMenuView
                     android:layout_width="wrap_content"
+                    android:layout_margin="30dp"
                     android:layout_height="wrap_content"
-                    android:layout_below="@+id/scoreText"
-                    android:layout_centerHorizontal="true"
-                    android:textAlignment="center"
-                    android:text="----"
-                    android:textColor="@color/orange"
-                    android:textSize="30dp"
-                    android:ems="10"
-                    android:backgroundTint="@color/ligth_orange"
-                    android:id="@+id/alcohol_level"
-                    android:clickable="false"
-                    android:minHeight="48dp"/>
+                    android:layout_below="@+id/scoreText">
+                <TextView
+                        android:layout_width="858dp"
+                        android:layout_height="wrap_content"
+                        android:textAlignment="center"
+                        android:text="---"
+                        android:textColor="@color/orange"
+                        android:textSize="30dp"
+                        android:layout_marginRight="0dp"
+                        android:ems="5"
+                        android:backgroundTint="@color/ligth_orange"
+                        android:id="@+id/alcohol_level"
+                        android:minHeight="48dp"/>
+                <TextView
+                        android:layout_width="5dp"
+                        android:layout_height="wrap_content"
+                        android:text="lv"
+                        android:textColor="@color/orange"
+                        android:textSize="20dp"
+                        android:layout_marginRight="0dp"
+                        android:backgroundTint="@color/ligth_orange"
+                        android:id="@+id/vl" android:labelFor="@id/alcohol_level"/>
+                <ImageButton
+                        android:layout_height="match_parent"
+                        android:src="@drawable/ic_upload"
+                        android:background="@color/ligth_orange"
+                        android:layout_width="50dp"
+                        android:layout_marginLeft="0dp"
+                        android:minWidth="50dp"
+                        android:minHeight="50dp"
+                        android:id="@+id/updateScoreButton" tools:ignore="SpeakableTextPresentCheck"/>
+            </androidx.appcompat.widget.ActionMenuView>
         </RelativeLayout>
     </RelativeLayout>
 

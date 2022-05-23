@@ -29,14 +29,14 @@
                     android:inputType="textPersonName"
                     android:hint="Name"
                     android:ems="10"
-                    android:id="@+id/editTextTextPersonName"/>
+                    android:id="@+id/PersonName"/>
             <EditText
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:inputType="textPersonName"
                     android:hint="Surname"
                     android:ems="10"
-                    android:id="@+id/editTextTextPersonSurname"/>
+                    android:id="@+id/PersonSurname"/>
 
 
         <EditText
@@ -45,15 +45,17 @@
                 android:hint="18"
                 android:inputType="number"
                 android:ems="10"
-                android:id="@+id/editTextNumber2"/>
+                android:id="@+id/peopleAge"/>
         <RadioGroup
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
+                    android:id="@+id/grpGender"
                     android:layout_height="match_parent">
                 <RadioButton
                         android:text="Male"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
+                        android:checked="true"
                         android:id="@+id/radioButton2"/>
                 <RadioButton
                         android:text="Female"
@@ -67,28 +69,21 @@
                     android:inputType="textPersonName"
                     android:hint="User Name"
                     android:ems="10"
-                    android:id="@+id/editTextTextPersonUserName"/>
+                    android:id="@+id/PersonUserName"/>
             <EditText
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:inputType="textPassword"
                     android:hint="Password"
                     android:ems="10"
-                    android:id="@+id/editTextTextPassword"/>
+                    android:id="@+id/Password"/>
             <EditText
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:inputType="textPassword"
                     android:hint="Confirm Password"
                     android:ems="10"
-                    android:id="@+id/editTextTextPasswordConfirm"/>
-            <EditText
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:hint="Email"
-                    android:inputType="textEmailAddress"
-                    android:ems="10"
-                    android:id="@+id/editTextTextEmailAddress"/>
+                    android:id="@+id/PasswordConfirm"/>
         <Button android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
