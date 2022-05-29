@@ -238,11 +238,13 @@ public class HomeFragment extends Fragment {
             String date = sdf.format(new Date());
             String hour=shf.format(new Date());
             String alcoholLevel= alcoholLv.getText().toString();
-            if (Integer.parseInt(alcoholLevel)>500){
-                Toast.makeText(getContext(), "You drank too much...", Toast.LENGTH_SHORT).show();
-                btnOpenUber.setEnabled(true);
-                btnCallHelp.setEnabled(true);
-            }
+            try {
+                if (Integer.parseInt(String.valueOf(Math.round(Double.parseDouble(alcoholLevel))))>500){
+                    Toast.makeText(getContext(), "You drank too much...", Toast.LENGTH_SHORT).show();
+                    btnOpenUber.setEnabled(true);
+                    btnCallHelp.setEnabled(true);
+                }
+            }catch (Exception e){e.printStackTrace();}
             if (!alcoholLevel.equals("---")) {
                 if (actualUser.getScoreID() == null) {
                     UUID randomUUID = UUID.randomUUID();
